@@ -26,9 +26,9 @@ export const footerCategories = [
 ];
 
 export const companyInfo = {
-  name: 'ElectroMart',
+  name: 'Techzonix',
   address: '123 Tech Street, Digital City',
-  email: 'info@electromart.com',
+  email: 'info@techzonix.com',
   phone: '+1 (555) 123-4567',
-  copyright: '© 2025 ElectroMart. All rights reserved.'
+  copyright: '© 2025 Techzonix. All rights reserved.'
 }; 
