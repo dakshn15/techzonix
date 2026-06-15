@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useUser } from "../../context/UserContext";
 
@@ -8,6 +9,7 @@ const Checkout = () => {
   const { cart, dispatch: cartDispatch } = useCart();
   const { user, addOrder } = useUser();
   const [form, setForm] = useState({
+    email: user.email || "",
     firstName: user.firstName || "",
     lastName: user.lastName || "",
     phone: "",
@@ -29,6 +31,8 @@ const Checkout = () => {
 
   const validate = () => {
     const newErrors = {};
+    if (!form.email) newErrors.email = "Email is required.";
+    else if (!form.email.includes("@")) newErrors.email = "Invalid email address.";
     if (!form.firstName) newErrors.firstName = "First name is required.";
     if (!form.lastName) newErrors.lastName = "Last name is required.";
     if (!form.phone) newErrors.phone = "Phone is required.";
@@ -68,6 +72,7 @@ const Checkout = () => {
       status: "Processing",
       total: `$${total}`,
       items: cart,
+      email: form.email,
       address: form.address,
       city: form.city,
       zip: form.zip,
@@ -93,23 +98,49 @@ const Checkout = () => {
                   {/* Email Field */}
                   <div className="mb-4">
                     <label htmlFor="email" className="block mb-2 font-medium md:text-base text-sm">Email Address <span className="text-red-500">*</span></label>
-                    <input type="email" id="email" className="form-input" required />
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="form-input"
+                      required
+                      value={form.email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                    {errors.email && touched.email && <div className="text-red-500 text-xs mt-1">{errors.email}</div>}
                     <p className="text-sm text-gray-500 mt-1">We'll send order confirmation to this email</p>
                   </div>
                   {/* Delivery Method */}
                   <div>
                     <label className="block mb-2 font-medium md:text-base text-sm">Delivery Method <span className="text-red-500">*</span></label>
                     <div className="space-y-3">
-                      <div className="radio-btn flex items-center p-3 border rounded-md">
-                        <input type="radio" id="delivery-standard" name="delivery-method" value="standard" className="text-primary focus:ring-primary mr-2" defaultChecked />
-                        <label htmlFor="delivery-standard" className="flex-1 flex flex-col md:flex-row md:items-center justify-between w-full">
+                      <div className="radio-btn flex items-center p-3 border rounded-md cursor-pointer hover:bg-gray-100 transition-colors">
+                        <input
+                          type="radio"
+                          id="delivery-standard"
+                          name="delivery"
+                          value="standard"
+                          className="text-primary focus:ring-primary mr-2 cursor-pointer"
+                          checked={form.delivery === "standard"}
+                          onChange={handleChange}
+                        />
+                        <label htmlFor="delivery-standard" className="flex-1 flex flex-col md:flex-row md:items-center justify-between w-full cursor-pointer">
                           <span className="font-medium">Standard Delivery (1-2 days)</span>
                           <span className="font-medium text-primary-dark">Free</span>
                         </label>
                       </div>
-                      <div className="radio-btn flex items-center p-3 border rounded-md">
-                        <input type="radio" id="delivery-express" name="delivery-method" value="express" className="text-primary focus:ring-primary mr-2" />
-                        <label htmlFor="delivery-express" className="flex-1 flex flex-col md:flex-row md:items-center justify-between w-full">
+                      <div className="radio-btn flex items-center p-3 border rounded-md cursor-pointer hover:bg-gray-100 transition-colors">
+                        <input
+                          type="radio"
+                          id="delivery-express"
+                          name="delivery"
+                          value="express"
+                          className="text-primary focus:ring-primary mr-2 cursor-pointer"
+                          checked={form.delivery === "express"}
+                          onChange={handleChange}
+                        />
+                        <label htmlFor="delivery-express" className="flex-1 flex flex-col md:flex-row md:items-center justify-between w-full cursor-pointer">
                           <span className="font-medium">Express Delivery (Same Day)</span>
                           <span className="font-medium text-primary-dark">$5.99</span>
                         </label>
@@ -156,13 +187,7 @@ const Checkout = () => {
                       {errors.zip && touched.zip && <div className="text-red-500 text-xs mt-1">{errors.zip}</div>}
                     </div>
                   </div>
-                  <div className="mt-4">
-                    <label className="block mb-2 font-medium md:text-base text-sm">Delivery Method <span className="text-red-500">*</span></label>
-                    <select name="delivery" className="form-input" value={form.delivery} onChange={handleChange}>
-                      <option value="standard">Standard Delivery (Free)</option>
-                      <option value="express">Express Delivery ($5.99)</option>
-                    </select>
-                  </div>
+
                   <div className="mt-4">
                     <label className="block mb-2 font-medium md:text-base text-sm">Payment Method <span className="text-red-500">*</span></label>
                     <select name="payment" className="form-input" value={form.payment} onChange={handleChange}>
@@ -243,7 +268,7 @@ const Checkout = () => {
                   </div>
                   <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span className="font-semibold">Free</span>
+                    <span className="font-semibold">{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Tax</span>
@@ -259,12 +284,12 @@ const Checkout = () => {
                   <div className="checkbox flex items-start">
                     <input type="checkbox" id="terms" className="rounded border-gray-300 text-primary focus:ring-primary mt-1 mr-2" required />
                     <label htmlFor="terms" className="flex-1 text-sm">
-                      I agree to the <a href="/terms-condition.html" className="text-primary hover:underline">Terms & Conditions</a>, <a href="/privacy-policy.html" className="text-primary hover:underline">Privacy Policy</a>, and <a href="/shipping-return.html" className="text-primary hover:underline">Refund Policy</a>
+                      I agree to the <Link to="/terms-condition" className="text-primary hover:underline">Terms & Conditions</Link>, <Link to="/privacy-policy" className="text-primary hover:underline">Privacy Policy</Link>, and <Link to="/shipping-return" className="text-primary hover:underline">Refund Policy</Link>
                     </label>
                   </div>
                 </div>
                 {/* Security Information */}
-                <button type="submit" form="checkout-form" className="btn-primary w-full" disabled={Object.keys(validate()).length > 0 || successMsg}>Place Order</button>
+                <button type="submit" form="checkout-form" className="btn-primary w-full" disabled={!!successMsg}>Place Order</button>
                 <div className="flex items-center justify-center mt-4 text-sm text-gray-500">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 mr-2 flex-shrink-0">
                     <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />

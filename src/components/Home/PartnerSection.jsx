@@ -4,9 +4,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
-import partner1 from "../../assets/images/partner-logo-1.png";
-import imageMap from "../../utils/imageMap";
-
 
 const PartnerSection = () => {
   return (

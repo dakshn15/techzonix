@@ -13,8 +13,8 @@ const ContactInfo = () => (
             </svg>
           </div>
           <h3 className="font-heading font-semibold text-xl mb-2">Our Location</h3>
-          <p className="text-gray-600 mb-2">123 Organic Avenue</p>
-          <p className="text-gray-600 mb-2">Green Hills, CA 94107</p>
+          <p className="text-gray-600 mb-2">123 Tech Boulevard</p>
+          <p className="text-gray-600 mb-2">Silicon Valley, CA 94025</p>
           <p className="text-gray-600 mb-4">United States</p>
           <a href="https://maps.app.goo.gl/xxt9ywxoSVqLFDCg7" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark font-medium">View on Map</a>
         </div>

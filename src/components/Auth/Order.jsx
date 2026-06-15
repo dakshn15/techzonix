@@ -3,11 +3,7 @@ import { Link } from "react-router-dom";
 import { FaUser, FaBox, FaMapMarkerAlt, FaHeart, FaSignOutAlt } from "react-icons/fa";
 import { useUser } from "../../context/UserContext";
 
-const statusStyles = {
-  Delivered: "bg-green-100 text-green-600 border-green-600",
-  Processing: "bg-primary bg-opacity-10 text-white border-primary",
-  Cancelled: "bg-red-100 text-red-600 border-red-600",
-};
+
 
 const Order = () => {
   const [filter, setFilter] = useState("all");
@@ -22,8 +18,7 @@ const Order = () => {
     .filter(order => filter === "all" || order.status.toLowerCase() === filter)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  // Show order items dynamically
-  const getOrderProducts = (order) => order.items || [];
+
 
   return (
     <section className="lg:py-20 py-10">

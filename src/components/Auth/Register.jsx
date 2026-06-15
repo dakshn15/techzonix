@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaFacebookF, FaGoogle } from "react-icons/fa";
 import { useUser } from "../../context/UserContext";
 
@@ -15,7 +15,6 @@ const Register = () => {
     terms: false,
   });
   const { register } = useUser();
-  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -78,7 +77,7 @@ const Register = () => {
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-2xl sm:text-4xl font-bold mb-2 capitalize">Create Your Account</h2>
-            <p className="text-gray-600">Join FreshMart for a seamless shopping experience</p>
+            <p className="text-gray-600">Join Techzonix for a seamless shopping experience</p>
           </div>
 
           {/* Registration Form */}
@@ -192,7 +191,7 @@ const Register = () => {
                     onChange={handleChange}
                   />
                   <label htmlFor="newsletter" className="flex-1 text-gray-700">
-                    Subscribe to our newsletter to receive updates, exclusive offers, and healthy recipe ideas.
+                    Subscribe to our newsletter to receive updates, exclusive offers, and tech news and product releases.
                   </label>
                 </div>
                 <div className="checkbox flex items-start">

@@ -1,9 +1,34 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useCompare } from "../../context/CompareContext";
 import imageMap from "../../utils/imageMap";
 
 const Compare = () => {
   const { compare, dispatch } = useCompare();
+
+  if (compare.length === 0) {
+    return (
+      <section className="lg:py-20 py-10">
+        <div className="md:container w-full mx-auto px-4">
+          <div className="max-w-md mx-auto text-center py-12 bg-white rounded-lg shadow-sm border p-6 flex flex-col items-center">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-primary mb-4">
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">No Products to Compare</h3>
+            <p className="text-gray-500 text-sm mb-6">
+              Add products to your compare list to see their side-by-side specs, pricing, and ratings.
+            </p>
+            <Link to="/products" className="btn-primary">
+              Browse Products
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="lg:py-20 py-10">
       <div className="md:container w-full mx-auto px-4">

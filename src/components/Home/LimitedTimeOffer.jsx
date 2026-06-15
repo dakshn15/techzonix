@@ -41,7 +41,7 @@ const LimitedTimeOffer = () => {
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      setTimers(prevTimers => prevTimers.map((t, idx) => {
+      setTimers(prevTimers => prevTimers.map((t) => {
         // If timer already reached zero, keep it at zero
         if (t.days === 0 && t.hours === 0 && t.minutes === 0 && t.seconds === 0) {
           return t;
@@ -56,7 +56,7 @@ const LimitedTimeOffer = () => {
       }));
     }, 1000);
     return () => clearInterval(interval);
-  }, [offers.length]);
+  }, []);
 
   const handleColorChange = (offerId, colorIdx) => {
     setSelectedColors((prev) => ({ ...prev, [offerId]: colorIdx }));

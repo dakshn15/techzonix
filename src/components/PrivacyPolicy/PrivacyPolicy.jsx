@@ -14,10 +14,10 @@ const PrivacyPolicy = () => (
 
           <div className="prose prose-lg max-w-none">
             <div className="border-l-4 border-primary p-4 mb-6 rounded-lg bg-primary/10">
-              <p className="font-medium text-gray-700 flex"><FaInfoCircle className="text-primary mr-2 mt-1 flex-shrink-0" />This Privacy Policy explains how FreshMart collects, uses, and protects your personal information when you use our services.</p>
+              <p className="font-medium text-gray-700 flex"><FaInfoCircle className="text-primary mr-2 mt-1 flex-shrink-0" />This Privacy Policy explains how Techzonix collects, uses, and protects your personal information when you use our services.</p>
             </div>
             <h2 className="font-bold text-xl md:text-3xl mb-5">1. Introduction</h2>
-            <p className="mb-4">FreshMart ("we", "us", or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website www.freshmart.com and use our services.</p>
+            <p className="mb-4">Techzonix ("we", "us", or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website www.techzonix.com and use our services.</p>
             <p className="mb-6">Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site or use our services.</p>
 
             <h2 className="font-bold text-xl md:text-3xl mb-5">2. Information We Collect</h2>
@@ -125,11 +125,11 @@ const PrivacyPolicy = () => (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="font-bold md:text-lg text-md md:mb-3 mb-2 text-gray-800 flex items-center"><FaMapMarkerAlt className="text-primary mr-2" />Our Address</h3>
-                  <p className="text-gray-600">FreshMart<br />123 Organic Avenue<br />Green Hills, CA 94107<br />United States</p>
+                  <p className="text-gray-600">Techzonix<br />123 Tech Boulevard<br />Silicon Valley, CA 94025<br />United States</p>
                 </div>
                 <div>
                   <h3 className="font-bold md:text-lg text-md md:mb-3 mb-2 text-gray-800 flex items-center"><FaEnvelope className="text-primary mr-2" />Email Us</h3>
-                  <p className="text-gray-600">privacy@freshmart.com</p>
+                  <p className="text-gray-600">privacy@techzonix.com</p>
                   <h3 className="font-bold md:text-lg text-md md:mb-3 mt-4 mb-2 text-gray-800 flex items-center"><FaPhone className="text-primary mr-2" />Call Us</h3>
                   <p className="text-gray-600">(555) 123-4567</p>
                 </div>

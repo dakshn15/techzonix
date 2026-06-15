@@ -1,9 +1,11 @@
+import usePageTitle from '../hooks/usePageTitle';
 import React from "react";
 import CommonBanner from "../components/Common/CommonBanner";
 import ProductList from "../components/ProductList/ProductList";
 
 
 const ProductListPage = () => {
+  usePageTitle("Products");
     return (
         <>
             <CommonBanner title="Products" />

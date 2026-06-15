@@ -1,38 +1,7 @@
 import React from "react";
 import { useCart } from "../../context/CartContext";
 import { Link } from "react-router-dom";
-import imageMap from "../../utils/imageMap";
 import QuantityInput from "../ui/QuantityInput";
-
-const initialCart = [
-  {
-    id: 1,
-    name: "iPhone 14 Pro",
-    image: imageMap["cart-1.png"],
-    price: 24.99,
-    quantity: 1,
-    desc: "128GB, Space Black",
-    link: "/product-detail",
-  },
-  {
-    id: 2,
-    name: "Apple Watch Series 8",
-    image: imageMap["cart-2.png"],
-    price: 6.99,
-    quantity: 1,
-    desc: "45mm, Silver",
-    link: "/product-detail",
-  },
-  {
-    id: 3,
-    name: "Sony WH-1000XM5",
-    image: imageMap["cart-3.png"],
-    price: 5.49,
-    quantity: 1,
-    desc: "Wireless, Blue",
-    link: "/product-detail",
-  },
-];
 
 const CartSection = () => {
   const { cart, dispatch } = useCart();
@@ -51,7 +20,7 @@ const CartSection = () => {
   const handleClear = () => dispatch({ type: "CLEAR_CART" });
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const tax = 3.0;
+  const tax = subtotal * 0.08;
   const total = subtotal + tax;
 
   return (
@@ -201,9 +170,18 @@ const CartSection = () => {
                   </button>
                 </div>
               </div>
-              <Link to="/checkout" className="btn-primary w-full">
-                Proceed to Checkout
-              </Link>
+              {cart.length === 0 ? (
+                <button
+                  disabled
+                  className="btn-primary w-full opacity-50 cursor-not-allowed text-center block"
+                >
+                  Proceed to Checkout
+                </button>
+              ) : (
+                <Link to="/checkout" className="btn-primary w-full text-center block">
+                  Proceed to Checkout
+                </Link>
+              )}
             </div>
           </div>
         </div>

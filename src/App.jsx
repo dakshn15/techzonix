@@ -1,13 +1,12 @@
-import React from "react";
 import { CartProvider } from "./context/CartContext";
 import { CompareProvider } from "./context/CompareContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import { UserProvider } from "./context/UserContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './index.css';
-import AnnounceBar from './components/Common/AnnounceBar';
-import Header from './components/Common/Header';
-import Footer from './components/Common/Footer';
+import MainLayout from './components/Common/MainLayout';
+import ScrollToTop from './components/Common/ScrollToTop';
+import ReloadPrompt from './components/PWA/ReloadPrompt';
 import HomePage from './pages/HomePage';
 import CartPage from "./pages/CartPage";
 import WishlistPage from "./pages/WishlistPage";
@@ -31,6 +30,7 @@ import LoginPage from "./pages/AuthPages/LoginPage";
 import RegisterPage from "./pages/AuthPages/RegisterPage";
 import ForgotPasswordPage from "./pages/AuthPages/ForgotPasswordPage";
 import OrderPage from "./pages/AuthPages/OrderPage";
+import OfflinePage from "./pages/OfflinePage";
 import RequireAuth from './components/Auth/RequireAuth';
 
 function App() {
@@ -40,31 +40,41 @@ function App() {
         <WishlistProvider>
           <UserProvider>
             <Router basename={import.meta.env.BASE_URL}>
+              <ScrollToTop />
               <Routes>
-                <Route path="/" element={<><AnnounceBar /><Header /><HomePage /><Footer /></>} />
-                <Route path="/cart" element={<><AnnounceBar /><Header /><CartPage /><Footer /></>} />
-                <Route path="/wishlist" element={<><AnnounceBar /><Header /><WishlistPage /><Footer /></>} />
-                <Route path="/compare" element={<><AnnounceBar /><Header /><ComparePage /><Footer /></>} />
-                <Route path="/products/:slug" element={<><AnnounceBar /><Header /><ProductPage /><Footer /></>} />
-                <Route path="/products" element={<><AnnounceBar /><Header /><ProductListPage /><Footer /></>} />
-                <Route path="/collections" element={<><AnnounceBar /><Header /><CollectionListPage /><Footer /></>} />
-                <Route path="/blogs/" element={<><AnnounceBar /><Header /><BlogPage /><Footer /></>} />
-                <Route path="/blogs/:slug" element={<><AnnounceBar /><Header /><ArticlePage /><Footer /></>} />
-                <Route path="/checkout" element={<RequireAuth><AnnounceBar /><Header /><CheckoutPage /><Footer /></RequireAuth>} />
-                <Route path="/about" element={<><AnnounceBar /><Header /><AboutPage /><Footer /></>} />
-                <Route path="/contact" element={<><AnnounceBar /><Header /><ContactPage /><Footer /></>} />
-                <Route path="/faq" element={<><AnnounceBar /><Header /><FaqPage /><Footer /></>} />
-                <Route path="/privacy-policy" element={<><AnnounceBar /><Header /><PrivacyPage /><Footer /></>} />
-                <Route path="/shipping-return" element={<><AnnounceBar /><Header /><ShippingPage /><Footer /></>} />
-                <Route path="/terms-condition" element={<><AnnounceBar /><Header /><TermsPage /><Footer /></>} />
-                <Route path="/address" element={<RequireAuth><AnnounceBar /><Header /><AddressPage /><Footer /></RequireAuth>} />
-                <Route path="/account" element={<RequireAuth><AnnounceBar /><Header /><AccountPage /><Footer /></RequireAuth>} />
-                <Route path="/order" element={<RequireAuth><AnnounceBar /><Header /><OrderPage /><Footer /></RequireAuth>} />
-                <Route path="/login" element={<><AnnounceBar /><Header /><LoginPage /><Footer /></>} />
-                <Route path="/register" element={<><AnnounceBar /><Header /><RegisterPage /><Footer /></>} />
-                <Route path="/forgot-password" element={<><AnnounceBar /><Header /><ForgotPasswordPage /><Footer /></>} />
+                {/* Main Layout Routes */}
+                <Route element={<MainLayout />}>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/cart" element={<CartPage />} />
+                  <Route path="/wishlist" element={<WishlistPage />} />
+                  <Route path="/compare" element={<ComparePage />} />
+                  <Route path="/products/:slug" element={<ProductPage />} />
+                  <Route path="/products" element={<ProductListPage />} />
+                  <Route path="/collections" element={<CollectionListPage />} />
+                  <Route path="/blogs" element={<BlogPage />} />
+                  <Route path="/blogs/:slug" element={<ArticlePage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/faq" element={<FaqPage />} />
+                  <Route path="/privacy-policy" element={<PrivacyPage />} />
+                  <Route path="/shipping-return" element={<ShippingPage />} />
+                  <Route path="/terms-condition" element={<TermsPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
+                  {/* Protected Routes */}
+                  <Route path="/checkout" element={<RequireAuth><CheckoutPage /></RequireAuth>} />
+                  <Route path="/address" element={<RequireAuth><AddressPage /></RequireAuth>} />
+                  <Route path="/account" element={<RequireAuth><AccountPage /></RequireAuth>} />
+                  <Route path="/order" element={<RequireAuth><OrderPage /></RequireAuth>} />
+                </Route>
+
+                {/* Standalone Pages (no layout) */}
+                <Route path="/offline" element={<OfflinePage />} />
                 <Route path="*" element={<ErrorPage />} />
               </Routes>
+              <ReloadPrompt />
             </Router>
           </UserProvider>
         </WishlistProvider>

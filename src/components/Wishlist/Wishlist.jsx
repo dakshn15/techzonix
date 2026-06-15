@@ -2,13 +2,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useWishlist } from "../../context/WishlistContext";
+import { useCart } from "../../context/CartContext";
 
 const Wishlist = () => {
   const { wishlist, dispatch } = useWishlist();
+  const { cart, dispatch: cartDispatch } = useCart();
 
   const handleRemove = (id) => {
     dispatch({ type: "REMOVE_FROM_WISHLIST", payload: id });
   };
+
+  const handleAddToCart = (item) => {
+    cartDispatch({ type: "ADD_TO_CART", payload: { ...item, quantity: 1 } });
+  };
+
+  const isInCart = (id) => cart.some((item) => item.id === id);
 
   return (
     <section className="py-10 lg:py-20">
@@ -57,14 +65,26 @@ const Wishlist = () => {
                     <td className="py-4 px-4 text-center">
                       <div className="flex flex-row justify-center gap-2">
                         {item.inStock ? (
-                          <button className="btn-primary px-3 py-2 font-medium text-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                              <circle cx="8" cy="21" r="1" />
-                              <circle cx="19" cy="21" r="1" />
-                              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-                            </svg>
-                            Add to Cart
-                          </button>
+                          isInCart(item.id) ? (
+                            <Link to="/cart" className="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md transition text-sm font-medium gap-2">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                              In Cart
+                            </Link>
+                          ) : (
+                            <button
+                              onClick={() => handleAddToCart(item)}
+                              className="btn-primary px-3 py-2 font-medium text-sm flex items-center gap-2"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                                <circle cx="8" cy="21" r="1" />
+                                <circle cx="19" cy="21" r="1" />
+                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                              </svg>
+                              Add to Cart
+                            </button>
+                          )
                         ) : (
                           <button className="inline-flex items-center justify-center bg-gray-300 text-gray-500 cursor-not-allowed px-3 py-2 rounded-md transition text-sm font-medium" disabled>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 mr-2">

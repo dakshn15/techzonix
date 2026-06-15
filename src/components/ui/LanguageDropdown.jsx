@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaChevronDown } from "react-icons/fa";
 
 const languages = [
@@ -10,10 +10,21 @@ const languages = [
 
 const LanguageDropdown = ({ selected, onChange }) => {
   const [open, setOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const current = languages.find(l => l.code === selected) || languages[0];
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <button
         type="button"
         className="w-full flex items-center justify-between gap-2 px-4 py-2 border rounded-md text-sm"

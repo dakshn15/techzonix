@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { products } from "../../data/productData";
 import QuantityInput from "../ui/QuantityInput";
 import { useCart } from "../../context/CartContext";
+import { FaStar, FaStarHalfAlt, FaShoppingCart } from "react-icons/fa";
+import usePageTitle from "../../hooks/usePageTitle";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs } from "swiper/modules";
@@ -12,21 +14,27 @@ import "swiper/css/thumbs";
 
 const ProductDetails = () => {
   const { slug } = useParams();
-  // Find product by matching the last part of the link (slug)
-  const product = products.find(p => {
-    const productSlug = p.link.split("/product/")[1] || p.link.split("/products/")[1];
-    return productSlug === slug;
-  });
-  if (!product) {
-    return <div className="text-center py-20 text-xl">Product not found.</div>;
-  }
-
+  
   // Tabs state
   const [activeTab, setActiveTab] = useState("description");
   // Quantity state
   const [quantity, setQuantity] = useState(1);
   // Cart context
   const { dispatch, cart } = useCart();
+  // Swiper thumbnails
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+
+  // Find product by matching the last part of the link (slug)
+  const product = products.find(p => {
+    const productSlug = p.link.split("/product/")[1] || p.link.split("/products/")[1];
+    return productSlug === slug;
+  });
+
+  usePageTitle(product ? product.name : "Product Details");
+
+  if (!product) {
+    return <div className="text-center py-20 text-xl">Product not found.</div>;
+  }
 
   const handleDecrement = () => {
     setQuantity(q => Math.max(1, q - 1));
@@ -56,8 +64,6 @@ const ProductDetails = () => {
       });
     }
   };
-
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   // Dynamic images, features, description, box contents, and specifications
   return (
@@ -129,12 +135,11 @@ const ProductDetails = () => {
               </div>
               <h1 className="font-bold text-2xl md:text-3xl mb-2">{product.name}</h1>
               <div className="flex flex-wrap items-center gap-2 mb-4">
-                <div className="flex text-yellow-400">
-                  {/* Render stars dynamically if you want */}
+                <div className="flex text-yellow-400 items-center">
                   {Array.from({ length: Math.floor(product.rating) }).map((_, i) => (
-                    <i key={i} className="fas fa-star"></i>
+                    <FaStar key={i} className="w-4 h-4 fill-current" />
                   ))}
-                  {product.rating % 1 >= 0.5 && <i className="fas fa-star-half-alt"></i>}
+                  {product.rating % 1 >= 0.5 && <FaStarHalfAlt className="w-4 h-4 fill-current" />}
                 </div>
                 <span className="text-gray-600 text-sm">{product.ratingCount} Reviews</span>
               </div>
@@ -178,7 +183,7 @@ const ProductDetails = () => {
                   onClick={handleAddToCart}
                   title={product.inStock ? (inCart ? "Already in Cart" : "Add to Cart") : "Out of Stock"}
                 >
-                  <i className="fa-solid fa-cart-shopping"></i>
+                  <FaShoppingCart className="w-4 h-4" />
                   {product.inStock ? (inCart ? "Added to Cart" : "Add to Cart") : "Out of Stock"}
                 </button>
               </div>

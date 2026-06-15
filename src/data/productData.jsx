@@ -124,7 +124,7 @@ export const products = [
     brand: "XPhone",
     images: [imageMap.product4, imageMap.product5, imageMap.product1],
     image: imageMap.product4,
-    link: "/products/portable-ssd-1tb",
+    link: "/products/smartphone-x-pro-5g",
     price: 119.99,
     oldPrice: null,
     category: "Mobile Phones",

@@ -53,11 +53,7 @@ const Address = () => {
   });
   const [editMode, setEditMode] = useState(false);
 
-  // Extract first and last name, and email from the default address (simulate user info)
-  const userName = addresses[0]?.name || "";
-  const [firstName, ...lastNameArr] = userName.split(" ");
-  const lastName = lastNameArr.join(" ");
-  const email = "john.doe@example.com";
+
 
   const labelOptions = [
     { value: "home", label: "Home" },

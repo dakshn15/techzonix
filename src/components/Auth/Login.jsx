@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaFacebookF, FaGoogle } from "react-icons/fa";
 import { useUser } from "../../context/UserContext";
 
@@ -7,6 +7,7 @@ const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const { login } = useUser();
   const navigate = useNavigate();
+  const location = useLocation();
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -36,7 +37,8 @@ const Login = () => {
       setErrors({ password: "Incorrect password." });
     } else if (result === true) {
       setErrors({});
-      navigate("/account");
+      const from = location.state?.from?.pathname || "/account";
+      navigate(from, { replace: true });
     }
   };
 
@@ -68,9 +70,14 @@ const Login = () => {
                 {errors.email && <div className="text-red-500 text-xs mt-1">{errors.email}</div>}
               </div>
               <div>
-                <label htmlFor="password" className="block mb-2 font-medium text-base">
-                  Password <span className="text-red-500">*</span>
-                </label>
+                <div className="flex justify-between items-center mb-2">
+                  <label htmlFor="password" className="block font-medium text-base">
+                    Password <span className="text-red-500">*</span>
+                  </label>
+                  <Link to="/forgot-password" className="text-sm text-primary hover:text-primary-dark font-medium transition-colors">
+                    Forgot password?
+                  </Link>
+                </div>
                 <input
                   type="password"
                   id="password"

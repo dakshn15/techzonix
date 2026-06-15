@@ -56,7 +56,7 @@ const CollectionListSection = () => (
       <div className="md:container w-full mx-auto px-4">
         <h2 className="font-bold text-2xl md:text-3xl lg:mb-8 mb-4">Featured Collections</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {featuredCollections.map((col, idx) => (
+          {featuredCollections.map((col) => (
             <div key={col.name} className="relative group overflow-hidden rounded-xl">
               <img
                 src={col.image}

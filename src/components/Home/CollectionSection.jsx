@@ -1,10 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { collections } from "../../data/collectionData";
-import { products } from "../../data/productData";
-
-
-const getProductCount = categoryName => products.filter(p => p.category === categoryName).length;
 
 const CollectionSection = () => {
   return (

@@ -4,6 +4,7 @@ import imageMap from "../../utils/imageMap";
 import blogs from "../../data/blogData.jsx";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaPinterestP, FaWhatsapp, FaShareNodes } from "react-icons/fa6";
 import { FaXTwitter } from "react-icons/fa6";
+import usePageTitle from "../../hooks/usePageTitle";
 
 const Article = () => {
    const { slug } = useParams();
@@ -11,6 +12,7 @@ const Article = () => {
      const blogSlug = blog.link.split("/blogs/")[1] || blog.link.split("/blogs/")[1];
      return blogSlug === slug;
    });
+   usePageTitle(blog ? blog.title : "Blog Article");
    if (!blog) {
      return <div className="text-center py-20 text-xl">blog not found.</div>;
    }

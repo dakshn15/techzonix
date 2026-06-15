@@ -1,10 +1,10 @@
-
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LanguageDropdown from "../ui/LanguageDropdown.jsx";
 import { FaChevronDown, FaHome, FaShoppingBag, FaNewspaper, FaInfoCircle, FaEnvelope, FaTimes } from "react-icons/fa";
 import imageMap from "../../utils/imageMap";
-
+import { categories } from "../../data/categoryData";
+import InstallButton from "../PWA/InstallButton";
 
 function MobileMenu({ isOpen, onClose }) {
   const [selectedLang, setSelectedLang] = useState("en");
@@ -36,7 +36,7 @@ function MobileMenu({ isOpen, onClose }) {
       >
         <div className="flex justify-between items-center p-4 border-b">
           <div className="logo-col">
-            <Link to="/">
+            <Link to="/" onClick={onClose}>
               <img src={imageMap.logo} alt="logo" loading="lazy" />
             </Link>
           </div>
@@ -52,7 +52,7 @@ function MobileMenu({ isOpen, onClose }) {
         <nav className="p-4">
           <ul className="space-y-4">
             <li>
-              <Link to="/products" className="flex items-center text-gray-700 text-base font-medium hover:text-primary transition-all duration-300">
+              <Link to="/" onClick={onClose} className="flex items-center text-gray-700 text-base font-medium hover:text-primary transition-all duration-300">
                 <FaHome className="mr-3" />Home
               </Link>
             </li>
@@ -69,35 +69,41 @@ function MobileMenu({ isOpen, onClose }) {
               </div>
               {shopDropdownOpen && (
                 <div className="mobile-dropdown-content pl-4 mt-3 ms-2">
-                  <Link to="/products" className="mb-3 rounded-lg text-gray-600 font-medium hover:text-primary flex items-center text-sm transition-all duration-300">
-                    Mobile
-                  </Link>
-                  <Link to="/products" className="mb-3 rounded-lg text-gray-600 font-medium hover:text-primary flex items-center text-sm transition-all duration-300">
-                    Laptops
-                  </Link>
-                  <Link to="/products" className="mb-3 rounded-lg text-gray-600 font-medium hover:text-primary flex items-center text-sm transition-all duration-300">
-                    Headphones
-                  </Link>
+                  {categories.map((cat) => (
+                    <Link
+                      key={cat.name}
+                      to={`/products?category=${encodeURIComponent(cat.name)}`}
+                      className="mb-3 rounded-lg text-gray-600 font-medium hover:text-primary flex items-center text-sm transition-all duration-300"
+                      onClick={onClose}
+                    >
+                      {cat.name}
+                    </Link>
+                  ))}
                 </div>
               )}
             </li>
             <li>
-              <Link to="/blog" className="flex items-center text-gray-700 text-base font-medium hover:text-primary transition-all duration-300">
+              <Link to="/blogs" onClick={onClose} className="flex items-center text-gray-700 text-base font-medium hover:text-primary transition-all duration-300">
                 <FaNewspaper className="mr-3" />Blog
               </Link> 
             </li>
             <li>
-              <Link to="/about" className="flex items-center text-gray-700 text-base font-medium hover:text-primary transition-all duration-300">
+              <Link to="/about" onClick={onClose} className="flex items-center text-gray-700 text-base font-medium hover:text-primary transition-all duration-300">
                 <FaInfoCircle className="mr-3" />About
               </Link>
             </li>
             <li>
-              <Link to="/contact" className="flex items-center text-gray-700 text-base font-medium hover:text-primary transition-all duration-300">
+              <Link to="/contact" onClick={onClose} className="flex items-center text-gray-700 text-base font-medium hover:text-primary transition-all duration-300">
                 <FaEnvelope className="mr-3" />Contact
               </Link>
             </li>
           </ul>
         </nav>
+
+        {/* Install App Button Wrapper */}
+        <div className="p-4 border-t mt-4">
+          <InstallButton className="w-full justify-center py-2.5 px-4 border border-primary/20 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors" />
+        </div>
       </div>
     </>
   );

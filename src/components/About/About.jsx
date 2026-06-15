@@ -1,6 +1,7 @@
 import React from "react";
 import imageMap from "../../utils/imageMap";
-import TeamCard, { teamMembers } from "../Common/TeamCard";
+import TeamCard from "../Common/TeamCard";
+import { teamMembers } from "../../data/teamData";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";

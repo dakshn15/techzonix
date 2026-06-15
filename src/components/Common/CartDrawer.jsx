@@ -81,7 +81,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
             ) : (
               cart.map((item, idx) => (
                 <div className="flex space-x-3 border-b pb-4" key={item.id ? item.id : idx}>
-                  <Link to="/product-detail" className="w-20 h-24 rounded-md overflow-hidden bg-gray-100 border p-3">
+                  <Link to={item.link} className="w-20 h-24 rounded-md overflow-hidden bg-gray-100 border p-3" onClick={onClose}>
                     <img src={productImages[item.image] || item.image} alt={item.name} className="object-contain h-full w-full" />
                   </Link>
                   <div className="flex-grow">

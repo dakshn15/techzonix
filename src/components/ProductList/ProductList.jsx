@@ -31,7 +31,8 @@ const ProductList = () => {
 
   // Update selectedCategories if query string changes
   useEffect(() => {
-    const cat = params.get("category") || "All Products";
+    const searchParams = new URLSearchParams(location.search);
+    const cat = searchParams.get("category") || "All Products";
     setSelectedCategories([cat]);
   }, [location.search]);
 
@@ -68,21 +69,7 @@ const ProductList = () => {
     return 0;
   });
 
-  // Handlers
-  const handleCategoryChange = cat => {
-    if (cat === "All Products") {
-      setSelectedCategories(["All Products"]);
-    } else {
-      setSelectedCategories(prev => {
-        const filtered = prev.filter(c => c !== "All Products");
-        if (filtered.includes(cat)) {
-          return filtered.filter(c => c !== cat);
-        } else {
-          return [...filtered, cat];
-        }
-      });
-    }
-  };
+
 
   return (
     <>

@@ -5,7 +5,7 @@ import AccountSidebar from "../Common/AccountSidebar";
 import { useUser } from "../../context/UserContext";
 
 const Account = () => {
-  const { user, setUser, registeredUsers, setRegisteredUsers, orders } = useUser();
+  const { user, setUser, setRegisteredUsers, orders } = useUser();
   const [account, setAccount] = useState({
     firstName: user.firstName,
     lastName: user.lastName,
@@ -22,17 +22,7 @@ const Account = () => {
     ? orders.slice(-5).reverse()
     : [];
 
-  // Get last 3 items ordered across all orders (most recent first)
-  const allOrderedItems = (user.orders || [])
-    .flatMap(order => order.items.map(item => ({
-      ...item,
-      orderId: order.id,
-      orderDate: order.date,
-      orderStatus: order.status,
-      orderTotal: order.total
-    })))
-    .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
-  const recentItems = allOrderedItems.slice(0, 3);
+
 
   // Handle account form changes
   const handleChange = (e) => {
