@@ -3,6 +3,7 @@ import imageMap from "../../utils/imageMap";
 import { Link } from "react-router-dom";
 import { footerLinks, footerCategories, companyInfo } from "../../data/siteData";
 import { FaFacebook, FaXTwitter, FaInstagram } from "react-icons/fa6";
+import InstallButton from "../PWA/InstallButton";
 
 const socialLinks = [
   { name: 'Facebook', icon: FaFacebook, url: 'https://www.facebook.com/' },
@@ -42,6 +43,9 @@ const Footer = () => {
                   <Link to={link.path} className="text-gray-400 hover:text-white transition-colors">{link.name}</Link>
                 </li>
               ))}
+              <li className="pt-1">
+                <InstallButton className="text-gray-400 hover:text-white transition-colors text-sm" />
+              </li>
             </ul>
           </div>
 

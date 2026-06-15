@@ -18,10 +18,16 @@ const Checkout = () => {
     zip: "",
     delivery: "standard",
     payment: "card",
+    cardNumber: "",
+    cardName: "",
+    cardExpiry: "",
+    cardCVV: "",
+    terms: false,
   });
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [successMsg, setSuccessMsg] = useState("");
+  const [submitAttempted, setSubmitAttempted] = useState(false);
   const [showCardFields, setShowCardFields] = useState(form.payment === "card");
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -31,15 +37,54 @@ const Checkout = () => {
 
   const validate = () => {
     const newErrors = {};
-    if (!form.email) newErrors.email = "Email is required.";
-    else if (!form.email.includes("@")) newErrors.email = "Invalid email address.";
+    if (!form.email) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = "Invalid email address.";
+    }
     if (!form.firstName) newErrors.firstName = "First name is required.";
     if (!form.lastName) newErrors.lastName = "Last name is required.";
-    if (!form.phone) newErrors.phone = "Phone is required.";
+    if (!form.phone) {
+      newErrors.phone = "Phone is required.";
+    } else if (!/^\+?[\d\s-]{7,15}$/.test(form.phone.trim())) {
+      newErrors.phone = "Invalid phone number format.";
+    }
     if (!form.address) newErrors.address = "Address is required.";
     if (!form.city) newErrors.city = "City is required.";
     if (!form.zip) newErrors.zip = "Postal code is required.";
-    if (cart.length === 0) newErrors.cart = "Your cart is empty.";
+
+    if (form.payment === "card") {
+      const cleanNum = form.cardNumber.replace(/\s+/g, "");
+      if (!form.cardNumber) {
+        newErrors.cardNumber = "Card number is required.";
+      } else if (!/^\d{16}$/.test(cleanNum)) {
+        newErrors.cardNumber = "Card number must be 16 digits.";
+      }
+
+      if (!form.cardName) {
+        newErrors.cardName = "Name on card is required.";
+      }
+
+      if (!form.cardExpiry) {
+        newErrors.cardExpiry = "Expiry date is required.";
+      } else if (!/^(0[1-9]|1[0-2])\/?([0-9]{2})$/.test(form.cardExpiry.trim())) {
+        newErrors.cardExpiry = "Use MM/YY format.";
+      }
+
+      if (!form.cardCVV) {
+        newErrors.cardCVV = "CVV is required.";
+      } else if (!/^\d{3,4}$/.test(form.cardCVV.trim())) {
+        newErrors.cardCVV = "CVV must be 3 or 4 digits.";
+      }
+    }
+
+    if (!form.terms) {
+      newErrors.terms = "You must agree to the Terms & Conditions.";
+    }
+
+    if (cart.length === 0) {
+      newErrors.cart = "Your cart is empty.";
+    }
     return newErrors;
   };
 
@@ -60,14 +105,20 @@ const Checkout = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSubmitAttempted(true);
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      const touchedAll = {};
+      Object.keys(form).forEach((key) => {
+        touchedAll[key] = true;
+      });
+      setTouched(touchedAll);
       return;
     }
     // Place order
     addOrder({
-      id: `#FM-${Math.floor(Math.random()*100000000)}`,
+      id: `#TZ-${Math.floor(Math.random() * 100000000)}`,
       date: new Date().toLocaleDateString(),
       status: "Processing",
       total: `$${total}`,
@@ -82,6 +133,7 @@ const Checkout = () => {
     });
     cartDispatch({ type: "CLEAR_CART" });
     setSuccessMsg("Order placed successfully!");
+    setSubmitAttempted(false);
   };
 
   return (
@@ -91,6 +143,12 @@ const Checkout = () => {
           {/* Left Side - Checkout Forms */}
           <div className="lg:w-2/3">
             <form id="checkout-form" className="md:space-y-8 space-y-6" onSubmit={handleSubmit} noValidate>
+              {submitAttempted && Object.keys(errors).length > 0 && (
+                <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-700 font-medium text-sm">
+                  Please fill out all required fields correctly before placing your order.
+                </div>
+              )}
+
               {/* 1. Customer Information */}
               <div>
                 <h2 className="font-semibold md:text-xl text-lg md:mb-4 mb-3">1. Customer Information</h2>
@@ -102,7 +160,7 @@ const Checkout = () => {
                       type="email"
                       id="email"
                       name="email"
-                      className="form-input"
+                      className={`form-input ${errors.email && touched.email ? "border-red-500 focus:ring-red-500" : ""}`}
                       required
                       value={form.email}
                       onChange={handleChange}
@@ -156,34 +214,34 @@ const Checkout = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="first-name" className="block mb-2 font-medium md:text-base text-sm">First Name <span className="text-red-500">*</span></label>
-                      <input type="text" id="first-name" name="firstName" className="form-input" required value={form.firstName} onChange={handleChange} onBlur={handleBlur} />
+                      <input type="text" id="first-name" name="firstName" className={`form-input ${errors.firstName && touched.firstName ? "border-red-500 focus:ring-red-500" : ""}`} required value={form.firstName} onChange={handleChange} onBlur={handleBlur} />
                       {errors.firstName && touched.firstName && <div className="text-red-500 text-xs mt-1">{errors.firstName}</div>}
                     </div>
                     <div>
                       <label htmlFor="last-name" className="block mb-2 font-medium md:text-base text-sm">Last Name <span className="text-red-500">*</span></label>
-                      <input type="text" id="last-name" name="lastName" className="form-input" required value={form.lastName} onChange={handleChange} onBlur={handleBlur} />
+                      <input type="text" id="last-name" name="lastName" className={`form-input ${errors.lastName && touched.lastName ? "border-red-500 focus:ring-red-500" : ""}`} required value={form.lastName} onChange={handleChange} onBlur={handleBlur} />
                       {errors.lastName && touched.lastName && <div className="text-red-500 text-xs mt-1">{errors.lastName}</div>}
                     </div>
                   </div>
                   <div className="mt-4">
                     <label htmlFor="phone" className="block mb-2 font-medium md:text-base text-sm">Phone Number <span className="text-red-500">*</span></label>
-                    <input type="tel" id="phone" name="phone" className="form-input" required value={form.phone} onChange={handleChange} onBlur={handleBlur} />
+                    <input type="tel" id="phone" name="phone" className={`form-input ${errors.phone && touched.phone ? "border-red-500 focus:ring-red-500" : ""}`} required value={form.phone} onChange={handleChange} onBlur={handleBlur} />
                     {errors.phone && touched.phone && <div className="text-red-500 text-xs mt-1">{errors.phone}</div>}
                   </div>
                   <div className="mt-4">
                     <label htmlFor="address" className="block mb-2 font-medium md:text-base text-sm">Address <span className="text-red-500">*</span></label>
-                    <input type="text" id="address" name="address" className="form-input" required value={form.address} onChange={handleChange} onBlur={handleBlur} />
+                    <input type="text" id="address" name="address" className={`form-input ${errors.address && touched.address ? "border-red-500 focus:ring-red-500" : ""}`} required value={form.address} onChange={handleChange} onBlur={handleBlur} />
                     {errors.address && touched.address && <div className="text-red-500 text-xs mt-1">{errors.address}</div>}
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <div>
                       <label htmlFor="city" className="block mb-2 font-medium md:text-base text-sm">City <span className="text-red-500">*</span></label>
-                      <input type="text" id="city" name="city" className="form-input" required value={form.city} onChange={handleChange} onBlur={handleBlur} />
+                      <input type="text" id="city" name="city" className={`form-input ${errors.city && touched.city ? "border-red-500 focus:ring-red-500" : ""}`} required value={form.city} onChange={handleChange} onBlur={handleBlur} />
                       {errors.city && touched.city && <div className="text-red-500 text-xs mt-1">{errors.city}</div>}
                     </div>
                     <div>
                       <label htmlFor="zip" className="block mb-2 font-medium md:text-base text-sm">Postal Code <span className="text-red-500">*</span></label>
-                      <input type="text" id="zip" name="zip" className="form-input" required value={form.zip} onChange={handleChange} onBlur={handleBlur} />
+                      <input type="text" id="zip" name="zip" className={`form-input ${errors.zip && touched.zip ? "border-red-500 focus:ring-red-500" : ""}`} required value={form.zip} onChange={handleChange} onBlur={handleBlur} />
                       {errors.zip && touched.zip && <div className="text-red-500 text-xs mt-1">{errors.zip}</div>}
                     </div>
                   </div>
@@ -200,19 +258,57 @@ const Checkout = () => {
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label htmlFor="cardNumber" className="block mb-2 font-medium md:text-base text-sm">Card Number <span className="text-red-500">*</span></label>
-                        <input type="text" id="cardNumber" name="cardNumber" className="form-input" value={form.cardNumber || ""} onChange={handleChange} />
+                        <input
+                          type="text"
+                          id="cardNumber"
+                          name="cardNumber"
+                          className={`form-input ${errors.cardNumber && touched.cardNumber ? "border-red-500 focus:ring-red-500" : ""}`}
+                          value={form.cardNumber}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          placeholder="1234 5678 1234 5678"
+                        />
+                        {errors.cardNumber && touched.cardNumber && <div className="text-red-500 text-xs mt-1">{errors.cardNumber}</div>}
                       </div>
                       <div>
                         <label htmlFor="cardName" className="block mb-2 font-medium md:text-base text-sm">Name on Card <span className="text-red-500">*</span></label>
-                        <input type="text" id="cardName" name="cardName" className="form-input" value={form.cardName || ""} onChange={handleChange} />
+                        <input
+                          type="text"
+                          id="cardName"
+                          name="cardName"
+                          className={`form-input ${errors.cardName && touched.cardName ? "border-red-500 focus:ring-red-500" : ""}`}
+                          value={form.cardName}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                        {errors.cardName && touched.cardName && <div className="text-red-500 text-xs mt-1">{errors.cardName}</div>}
                       </div>
                       <div>
                         <label htmlFor="cardExpiry" className="block mb-2 font-medium md:text-base text-sm">Expiry Date <span className="text-red-500">*</span></label>
-                        <input type="text" id="cardExpiry" name="cardExpiry" className="form-input" value={form.cardExpiry || ""} onChange={handleChange} placeholder="MM/YY" />
+                        <input
+                          type="text"
+                          id="cardExpiry"
+                          name="cardExpiry"
+                          className={`form-input ${errors.cardExpiry && touched.cardExpiry ? "border-red-500 focus:ring-red-500" : ""}`}
+                          value={form.cardExpiry}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          placeholder="MM/YY"
+                        />
+                        {errors.cardExpiry && touched.cardExpiry && <div className="text-red-500 text-xs mt-1">{errors.cardExpiry}</div>}
                       </div>
                       <div>
                         <label htmlFor="cardCVV" className="block mb-2 font-medium md:text-base text-sm">CVV <span className="text-red-500">*</span></label>
-                        <input type="text" id="cardCVV" name="cardCVV" className="form-input" value={form.cardCVV || ""} onChange={handleChange} />
+                        <input
+                          type="text"
+                          id="cardCVV"
+                          name="cardCVV"
+                          className={`form-input ${errors.cardCVV && touched.cardCVV ? "border-red-500 focus:ring-red-500" : ""}`}
+                          value={form.cardCVV}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                        {errors.cardCVV && touched.cardCVV && <div className="text-red-500 text-xs mt-1">{errors.cardCVV}</div>}
                       </div>
                     </div>
                   )}
@@ -282,11 +378,22 @@ const Checkout = () => {
                 {/* Terms */}
                 <div className="md:mb-6 mb-4">
                   <div className="checkbox flex items-start">
-                    <input type="checkbox" id="terms" className="rounded border-gray-300 text-primary focus:ring-primary mt-1 mr-2" required />
+                    <input
+                      type="checkbox"
+                      id="terms"
+                      name="terms"
+                      checked={form.terms}
+                      onChange={(e) => {
+                        setForm(prev => ({ ...prev, terms: e.target.checked }));
+                        setErrors(prev => ({ ...prev, terms: undefined }));
+                      }}
+                      className={`rounded border-gray-300 text-primary focus:ring-primary mt-1 mr-2 ${errors.terms && touched.terms ? "border-red-500 focus:ring-red-500" : ""}`}
+                    />
                     <label htmlFor="terms" className="flex-1 text-sm">
                       I agree to the <Link to="/terms-condition" className="text-primary hover:underline">Terms & Conditions</Link>, <Link to="/privacy-policy" className="text-primary hover:underline">Privacy Policy</Link>, and <Link to="/shipping-return" className="text-primary hover:underline">Refund Policy</Link>
                     </label>
                   </div>
+                  {errors.terms && touched.terms && <div className="text-red-500 text-xs mt-1">{errors.terms}</div>}
                 </div>
                 {/* Security Information */}
                 <button type="submit" form="checkout-form" className="btn-primary w-full" disabled={!!successMsg}>Place Order</button>

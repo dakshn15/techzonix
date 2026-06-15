@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LanguageDropdown from "../ui/LanguageDropdown";
+import InstallButton from "../PWA/InstallButton";
 
 const AnnounceBar = () => {
   const [selectedLang, setSelectedLang] = useState("en");
@@ -27,7 +28,8 @@ const AnnounceBar = () => {
             Free shipping on orders over $50!
             <Link to="/products" className="underline">Shop now</Link>
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
+            <InstallButton className="text-white hover:text-white/80 text-xs flex items-center gap-1" />
             <LanguageDropdown selected={selectedLang} onChange={setSelectedLang} />
           </div>
         </div>
